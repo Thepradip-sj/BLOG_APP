@@ -11,6 +11,7 @@ router.post("/", protect, async (req, res) => {
     const blog = await Blog.create({
       title,
       content,
+      img,
       author: req.user._id,
     });
 
@@ -57,6 +58,32 @@ router.delete("/:id", protect, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+// UPDATE BLOG (only owner)
+router.put("/:id", protect, async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    // owner check
+    if (blog.author.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
+    blog.title = req.body.title || blog.title;
+    blog.content = req.body.content || blog.content;
+
+    const updatedBlog = await blog.save();
+
+    res.json(updatedBlog);
+  } catch (error) {
+    console.log("UPDATE BLOG ERROR 👉", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 
 module.exports = router;

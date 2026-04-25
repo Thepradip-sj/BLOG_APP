@@ -18,3 +18,5 @@ export const loginUser = (data) => API.post("/auth/login", data);
 export const registerUser = (data) => API.post("/auth/register", data);
 export const createBlog = (data) => API.post("/blogs", data);
 export const deleteBlog = (id) => API.delete(`/blogs/${id}`);
+export const updateBlog = (id, data) => API.put(`/blogs/${id}`, data);
+

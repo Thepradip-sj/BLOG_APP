@@ -15,22 +15,31 @@ const BlogCard = ({ blog, onDeleted }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
-      className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-5 rounded-2xl shadow-xl"
+      className="bg-black text-white p-5 rounded-2xl shadow-xl"
     >
       <h2 className="text-xl font-bold">{blog.title}</h2>
+      <img>{blog.img}</img>
       <p className="text-sm opacity-90 mt-2 line-clamp-3">{blog.content}</p>
 
       <div className="mt-4 flex items-center justify-between text-xs opacity-90">
         <span>✍️ {blog.author?.name}</span>
 
         {isOwner && (
-          <button
-            onClick={remove}
-            className="bg-black/30 px-3 py-1 rounded hover:bg-black/50"
-          >
-            Delete
-          </button>
-        )}
+  <div className="flex gap-2">
+    <button
+      onClick={() => onEdit(blog)}
+      className="bg-black/30 px-3 py-1 rounded hover:bg-black/50"
+    >
+      Edit
+    </button>
+    <button
+      onClick={remove}
+      className="bg-red-500/70 px-3 py-1 rounded hover:bg-red-600"
+    >
+      Delete
+    </button>
+  </div>
+)}
       </div>
     </motion.div>
   );

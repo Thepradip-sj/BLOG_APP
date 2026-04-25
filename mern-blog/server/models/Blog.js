@@ -14,6 +14,10 @@ const blogSchema=new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    img:{
+      type:String,
+      required:true,
+    },
   },
   { timestamps: true }
 );

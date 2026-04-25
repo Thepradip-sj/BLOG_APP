@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { fetchBlogs } from "../services/api";
+import { fetchBlogs, updateBlog } from "../services/api";
 import BlogCard from "../components/BlogCards";
 import { motion } from "framer-motion";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingBlog, setEditingBlog] = useState(null);
+  const [editForm, setEditForm] = useState({ title: "", content: "" });
 
-  // 🔁 central function to load blogs
+  // 🔁 load blogs
   const loadBlogs = async () => {
     try {
       const res = await fetchBlogs();
@@ -23,6 +25,24 @@ const Home = () => {
     loadBlogs();
   }, []);
 
+  // ✏️ edit handler
+  const handleEdit = (blog) => {
+    setEditingBlog(blog);
+    setEditForm({ title: blog.title, content: blog.content });
+  };
+
+  // ✅ submit edit
+  const submitEdit = async (e) => {
+    e.preventDefault();
+    try {
+      await updateBlog(editingBlog._id, editForm);
+      setEditingBlog(null);
+      loadBlogs();
+    } catch {
+      alert("Update failed");
+    }
+  };
+
   // ⏳ Loading spinner
   if (loading) {
     return (
@@ -37,34 +57,78 @@ const Home = () => {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen px-6 py-10 bg-gradient-to-b from-gray-100 to-gray-200"
-    >
-      {/* Heading */}
-      <h1 className="text-4xl font-extrabold text-center mb-10 text-gray-800">
-        ✨ Latest Blogs
-      </h1>
+    <>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen px-6 py-10 bg-gradient-to-b from-gray-100 to-gray-200"
+      >
+        <h1 className="text-4xl font-extrabold text-center mb-10 text-gray-800">
+          ✨ Latest Blogs
+        </h1>
 
-      {/* Empty state */}
-      {blogs.length === 0 && (
-        <p className="text-center text-gray-500">
-          No blogs yet. Be the first one to write ✍️
-        </p>
+        {blogs.length === 0 && (
+          <p className="text-center text-gray-500">
+            No blogs yet. Be the first one to write ✍️
+          </p>
+        )}
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+          {blogs.map((blog) => (
+            <BlogCard
+              key={blog._id}
+              blog={blog}
+              onDeleted={loadBlogs}
+              onEdit={handleEdit}
+            />
+          ))}
+        </div>
+      </motion.div>
+
+      {/* ✏️ Edit Modal */}
+      {editingBlog && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+          <motion.form
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white p-6 rounded-xl shadow-xl w-[380px]"
+            onSubmit={submitEdit}
+          >
+            <h2 className="text-xl font-bold mb-4">Edit Blog ✏️</h2>
+
+            <input
+              value={editForm.title}
+              onChange={(e) =>
+                setEditForm({ ...editForm, title: e.target.value })
+              }
+              className="w-full mb-3 p-2 border rounded"
+            />
+
+            <textarea
+              value={editForm.content}
+              onChange={(e) =>
+                setEditForm({ ...editForm, content: e.target.value })
+              }
+              rows={4}
+              className="w-full mb-4 p-2 border rounded"
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setEditingBlog(null)}
+                className="px-3 py-1 border rounded"
+              >
+                Cancel
+              </button>
+              <button className="px-4 py-1 bg-purple-600 text-white rounded">
+                Update
+              </button>
+            </div>
+          </motion.form>
+        </div>
       )}
-
-      {/* Blog grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-        {blogs.map((blog) => (
-          <BlogCard
-            key={blog._id}
-            blog={blog}
-            onDeleted={loadBlogs} // 🔥 refresh after delete
-          />
-        ))}
-      </div>
-    </motion.div>
+    </>
   );
 };
 

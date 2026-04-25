@@ -11,11 +11,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the MERN Blog API");
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 

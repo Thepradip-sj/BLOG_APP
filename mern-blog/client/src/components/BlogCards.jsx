@@ -15,7 +15,7 @@ const BlogCard = ({ blog, onDeleted }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
-      className="bg-black text-white p-5 rounded-2xl shadow-xl"
+      className="bg-pink-500 text-white p-5 rounded-2xl shadow-xl"
     >
       <h2 className="text-xl font-bold">{blog.title}</h2>
       <img>{blog.img}</img>

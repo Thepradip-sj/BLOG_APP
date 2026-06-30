@@ -1,22 +1,15 @@
-/**
- * gemini.js — shared Gemini AI service
- * Place this in: src/services/gemini.js
- *
- * Get a free API key at: https://aistudio.google.com/api-keys
- * Uses gemini-2.5-flash (free tier: ~10 req/min, 500 req/day)
- */
+
 
 const GEMINI_KEY_STORAGE = "gemini_api_key";
 const MODEL = "gemini-2.5-flash";
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
-/* ── Key management ─────────────────────────────────── */
 export const getGeminiKey = () => localStorage.getItem(GEMINI_KEY_STORAGE) || "";
 export const saveGeminiKey = (key) => localStorage.setItem(GEMINI_KEY_STORAGE, key.trim());
 export const clearGeminiKey = () => localStorage.removeItem(GEMINI_KEY_STORAGE);
 export const hasGeminiKey = () => !!getGeminiKey();
 
-/* ── Core API call ──────────────────────────────────── */
+
 export const callGemini = async (prompt, options = {}) => {
   const key = getGeminiKey();
   if (!key) throw new Error("No Gemini API key found. Please add your key first.");
@@ -48,7 +41,7 @@ export const callGemini = async (prompt, options = {}) => {
   return text.trim();
 };
 
-/* ── Blog-specific prompt helpers ───────────────────── */
+
 export const geminiPrompts = {
   generate: (title) =>
     `Write a detailed, engaging blog post about: "${title}".

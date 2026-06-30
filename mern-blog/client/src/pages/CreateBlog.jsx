@@ -7,9 +7,7 @@ import {
   getGeminiKey, saveGeminiKey, clearGeminiKey, hasGeminiKey,
 } from "../services/gemini";
 
-/* ────────────────────────────────────────────────────────
-   AI Key Setup Widget
-──────────────────────────────────────────────────────── */
+
 const KeySetup = ({ onSaved }) => {
   const [key, setKey] = useState("");
 
@@ -68,9 +66,7 @@ const KeySetup = ({ onSaved }) => {
   );
 };
 
-/* ────────────────────────────────────────────────────────
-   Single AI Action Button
-──────────────────────────────────────────────────────── */
+
 const AiAction = ({ icon, label, desc, active, onClick }) => (
   <button
     onClick={onClick}
@@ -93,9 +89,7 @@ const AiAction = ({ icon, label, desc, active, onClick }) => (
   </button>
 );
 
-/* ────────────────────────────────────────────────────────
-   AI Panel
-──────────────────────────────────────────────────────── */
+
 const ACTIONS = [
   { key: "generate",   icon: "✦", label: "Generate post",   desc: "Full post from your title" },
   { key: "improve",    icon: "✨", label: "Improve writing", desc: "Polish & fix existing content" },
@@ -371,9 +365,6 @@ const AiPanel = ({ title, content, onInsert, onClose }) => {
   );
 };
 
-/* ────────────────────────────────────────────────────────
-   CreateBlog Page
-──────────────────────────────────────────────────────── */
 const CreateBlog = () => {
   const [form, setForm] = useState({ title: "", content: "", img: "" });
   const [loading, setLoading] = useState(false);
@@ -425,7 +416,7 @@ const CreateBlog = () => {
         bottom: -80, right: -80,
       }} />
 
-      {/* layout: form + AI panel */}
+      
       <div className="flex gap-6 max-w-5xl mx-auto px-6 py-12 relative z-10 items-start">
 
         {/* ── Main form ── */}

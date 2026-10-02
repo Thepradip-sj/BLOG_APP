@@ -3,6 +3,9 @@ const router = express.Router();
 const Blog = require("../models/Blog");
 const protect = require("../middleware/authMiddleware");
 
+
+
+
 // CREATE BLOG
 router.post("/", protect, async (req, res) => {
   try {
@@ -33,6 +36,27 @@ router.get("/", async (req, res) => {
   } catch (error) {
     console.log("GET BLOGS ERROR 👉", error.message);
     res.status(500).json({ message: "Server error" });
+  }
+});
+router.get("/:id", async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id)
+      .populate("author", "name")
+      .lean();
+
+    if (!blog) {
+      return res.status(404).json({
+        message: "Blog not found",
+      });
+    }
+
+    res.status(200).json(blog);
+  } catch (error) {
+    console.log("GET SINGLE BLOG ERROR 👉", error.message);
+
+    res.status(500).json({
+      message: "Server error",
+    });
   }
 });
 // DELETE BLOG (only owner)

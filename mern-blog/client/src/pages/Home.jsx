@@ -83,8 +83,9 @@ const BlogDetail = ({ blog, onClose }) => (
   </AnimatePresence>
 );
 
-/* ── Edit Modal ──────────────────────────────────────── */
+/* ── Edit Modal ────*/
 const EditModal = ({ blog, form, onChange, onSubmit, onClose }) => {
+
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
 
@@ -278,6 +279,7 @@ const EditModal = ({ blog, form, onChange, onSubmit, onClose }) => {
 
 /* ── Home ────────────────────────────────────────────── */
 const Home = () => {
+
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBlog, setSelectedBlog] = useState(null);
@@ -337,10 +339,6 @@ const Home = () => {
           transition={{ duration: 0.5 }}
           className="max-w-6xl mx-auto px-6 pt-14 pb-10"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-3"
-            style={{ color: "#e94560" }}>
-            Community writing
-          </p>
           <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight"
             style={{ color: "#f1f5f9", letterSpacing: "-0.02em" }}>
             Latest Blogs

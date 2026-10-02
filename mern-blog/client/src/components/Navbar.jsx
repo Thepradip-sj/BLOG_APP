@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { getUser, isLoggedIn, logout } from "../services/auth";
+import { BookOpen } from 'lucide-react';
+
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -37,13 +39,13 @@ const Navbar = () => {
             className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black"
             style={{ background: "linear-gradient(135deg, #e94560 0%, #c2185b 100%)" }}
           >
-            B
+            <BookOpen />
           </div>
           <span
             className="text-base font-extrabold tracking-tight"
             style={{ color: "#f1f5f9" }}
           >
-            MERN<span style={{ color: "#e94560" }}>Blog</span>
+            Blo<span style={{ color: "#e94560" }}>gify</span>
           </span>
         </Link>
 

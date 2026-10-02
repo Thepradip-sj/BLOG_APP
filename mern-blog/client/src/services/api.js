@@ -12,7 +12,8 @@ API.interceptors.request.use((req) => {
   }
   return req;
 });
-
+export const fetchBlogById = (id) =>
+  API.get(`/blogs/${id}`);
 export const fetchBlogs = () => API.get("/blogs");
 export const loginUser = (data) => API.post("/auth/login", data);
 export const registerUser = (data) => API.post("/auth/register", data);

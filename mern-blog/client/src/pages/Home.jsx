@@ -3,6 +3,8 @@ import { fetchBlogs, updateBlog } from "../services/api";
 import BlogCard from "../components/BlogCards";
 import { motion, AnimatePresence } from "framer-motion";
 import { callGemini, geminiPrompts, hasGeminiKey } from "../services/gemini";
+import { useNavigate } from "react-router-dom";
+
 
 const fmt = (dateStr) =>
   dateStr
@@ -12,76 +14,76 @@ const fmt = (dateStr) =>
     : null;
 
 /* ── Blog Detail Panel ───────────────────────────────── */
-const BlogDetail = ({ blog, onClose }) => (
-  <AnimatePresence>
-    {blog && (
-      <>
-        <motion.div
-          key="backdrop"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="fixed inset-0 z-40"
-          style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}
-        />
-        <motion.aside
-          key="panel"
-          initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
-          transition={{ type: "spring", stiffness: 300, damping: 32 }}
-          className="fixed top-0 right-0 h-full z-50 overflow-y-auto"
-          style={{
-            width: "min(560px,100vw)",
-            background: "linear-gradient(160deg,#0f0f1a 0%,#111827 100%)",
-            borderLeft: "1px solid rgba(255,255,255,0.07)",
-          }}
-        >
-          {blog.img && (
-            <div className="relative w-full overflow-hidden" style={{ height: 220 }}>
-              <img src={blog.img} alt={blog.title} className="w-full h-full object-cover"
-                style={{ filter: "brightness(0.72)" }} />
-              <div className="absolute inset-0" style={{
-                background: "linear-gradient(to bottom,transparent 40%,#0f0f1a 100%)",
-              }} />
-            </div>
-          )}
-          <div className="px-8 py-6">
-            <button onClick={onClose} className="mb-6 flex items-center gap-2 text-sm font-medium"
-              style={{ color: "rgba(255,255,255,0.38)" }}>
-              <span style={{ fontSize: 16 }}>←</span> Back to blogs
-            </button>
-            <span className="inline-block text-[10px] font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
-              style={{ background: "rgba(233,69,96,0.18)", color: "#e94560", border: "1px solid rgba(233,69,96,0.3)" }}>
-              Blog
-            </span>
-            <h1 className="text-2xl font-extrabold leading-tight mb-4" style={{ color: "#f1f5f9" }}>
-              {blog.title}
-            </h1>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
-                style={{ background: "#e94560", color: "#fff" }}>
-                {blog.author?.name?.[0]?.toUpperCase() ?? "?"}
-              </div>
-              <div>
-                <p className="text-sm font-semibold" style={{ color: "#e2e8f0" }}>
-                  {blog.author?.name ?? "Anonymous"}
-                </p>
-                {fmt(blog.createdAt) && (
-                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
-                    {fmt(blog.createdAt)}
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="mb-8" style={{ height: 1, background: "rgba(255,255,255,0.07)" }} />
-            <div className="text-base leading-relaxed whitespace-pre-wrap"
-              style={{ color: "rgba(255,255,255,0.7)" }}>
-              {blog.content}
-            </div>
-          </div>
-        </motion.aside>
-      </>
-    )}
-  </AnimatePresence>
-);
+// const BlogDetail = ({ blog, onClose }) => (
+//   <AnimatePresence>
+//     {blog && (
+//       <>
+//         <motion.div
+//           key="backdrop"
+//           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+//           onClick={onClose}
+//           className="fixed inset-0 z-40"
+//           style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}
+//         />
+//         <motion.aside
+//           key="panel"
+//           initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
+//           transition={{ type: "spring", stiffness: 300, damping: 32 }}
+//           className="fixed top-0 right-0 h-full z-50 overflow-y-auto"
+//           style={{
+//             width: "min(560px,100vw)",
+//             background: "linear-gradient(160deg,#0f0f1a 0%,#111827 100%)",
+//             borderLeft: "1px solid rgba(255,255,255,0.07)",
+//           }}
+//         >
+//           {blog.img && (
+//             <div className="relative w-full overflow-hidden" style={{ height: 220 }}>
+//               <img src={blog.img} alt={blog.title} className="w-full h-full object-cover"
+//                 style={{ filter: "brightness(0.72)" }} />
+//               <div className="absolute inset-0" style={{
+//                 background: "linear-gradient(to bottom,transparent 40%,#0f0f1a 100%)",
+//               }} />
+//             </div>
+//           )}
+//           <div className="px-8 py-6">
+//             <button onClick={onClose} className="mb-6 flex items-center gap-2 text-sm font-medium"
+//               style={{ color: "rgba(255,255,255,0.38)" }}>
+//               <span style={{ fontSize: 16 }}>←</span> Back to blogs
+//             </button>
+//             <span className="inline-block text-[10px] font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
+//               style={{ background: "rgba(233,69,96,0.18)", color: "#e94560", border: "1px solid rgba(233,69,96,0.3)" }}>
+//               Blog
+//             </span>
+//             <h1 className="text-2xl font-extrabold leading-tight mb-4" style={{ color: "#f1f5f9" }}>
+//               {blog.title}
+//             </h1>
+//             <div className="flex items-center gap-3 mb-8">
+//               <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+//                 style={{ background: "#e94560", color: "#fff" }}>
+//                 {blog.author?.name?.[0]?.toUpperCase() ?? "?"}
+//               </div>
+//               <div>
+//                 <p className="text-sm font-semibold" style={{ color: "#e2e8f0" }}>
+//                   {blog.author?.name ?? "Anonymous"}
+//                 </p>
+//                 {fmt(blog.createdAt) && (
+//                   <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+//                     {fmt(blog.createdAt)}
+//                   </p>
+//                 )}
+//               </div>
+//             </div>
+//             <div className="mb-8" style={{ height: 1, background: "rgba(255,255,255,0.07)" }} />
+//             <div className="text-base leading-relaxed whitespace-pre-wrap"
+//               style={{ color: "rgba(255,255,255,0.7)" }}>
+//               {blog.content}
+//             </div>
+//           </div>
+//         </motion.aside>
+//       </>
+//     )}
+//   </AnimatePresence>
+// );
 
 /* ── Edit Modal ────*/
 const EditModal = ({ blog, form, onChange, onSubmit, onClose }) => {
@@ -285,7 +287,7 @@ const Home = () => {
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [editingBlog, setEditingBlog] = useState(null);
   const [editForm, setEditForm] = useState({ title: "", content: "", img: "" });
-
+  const navigate = useNavigate();
   const loadBlogs = async () => {
     try {
       const res = await fetchBlogs();
@@ -374,7 +376,9 @@ const Home = () => {
                     blog={blog}
                     onDeleted={loadBlogs}
                     onEdit={handleEdit}
-                    onClick={() => setSelectedBlog(blog)}
+                    onClick={() => navigate(`/blogs/${blog._id}`, {
+                    state: { blog }
+                    })}
                   />
                 </motion.div>
               ))}
@@ -383,7 +387,7 @@ const Home = () => {
         </main>
       </div>
 
-      <BlogDetail blog={selectedBlog} onClose={() => setSelectedBlog(null)} />
+      {/* <BlogDetail blog={selectedBlog} onClose={() => setSelectedBlog(null)} /> */}
       <EditModal
         blog={editingBlog}
         form={editForm}
